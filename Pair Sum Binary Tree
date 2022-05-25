@@ -1,0 +1,47 @@
+//time complexity is O(nlogn) and space complexity is O(n)
+
+#include <bits/stdc++.h>
+int k=0;
+
+void convert(BinaryTreeNode<int>*root,int *arr)
+{
+    if(root==NULL)
+        return;
+    //to fill array with tree values
+    arr[k++] = root->data;
+    //after completion k-1 will be the index till which we have elements
+    //and k will be the length of aray
+    convert(root->left,arr);
+    convert(root->right,arr);
+}
+void pairSum(BinaryTreeNode<int> *root, int sum) {
+    int arr[100000001];//we made an array
+    //now we convert tree into array
+    
+    convert(root,arr);
+    
+    //now we have array , now we sort it
+    /*Here we take two parameters, the beginning of the
+    array and the length k upto which we want the array to
+    be sorted*/
+    sort(arr,arr+k);
+    
+    //now the array is sorted so we perform operations
+    
+    int i=0;//pointer at start
+    int j=k-1;//pointer at end
+    
+    while(i<j)
+    {
+        if(arr[i]+arr[j]==sum)
+        {
+            cout<<arr[i]<<" "<<arr[j]<<endl;
+            i++;
+            j--;
+        }
+        else if(arr[i]+arr[j] > sum)
+            j--;
+        else if(arr[i]+arr[j] < sum)
+            i++;
+    }
+}
