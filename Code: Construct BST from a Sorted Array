@@ -1,0 +1,16 @@
+BinaryTreeNode<int>* help(int *input, int start,int end){
+    //base case
+    if(start>end)
+        return NULL;
+    //now we get the middle element index to make it root node
+    int mid = (start + end)/2;
+    BinaryTreeNode<int>* root = new BinaryTreeNode<int>(input[mid]);
+    //now making calls for creating left and right balanced bst
+    root->left = help(input,start,mid-1);
+    root->right = help(input,mid+1,end);
+    return root;
+    
+}
+BinaryTreeNode<int>* constructTree(int *input, int n) {
+	return help(input,0,n-1);
+}
