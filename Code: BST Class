@@ -1,0 +1,153 @@
+class BST {
+    // Define the data members
+    BinaryTreeNode<int>* root;
+   public:
+    BST() { 
+        // Implement the Constructor
+        //becoz v don't want that when obj is made of bst class, 
+        //root direct to garbage value so v put null in it
+        root = NULL;
+    }
+    //now we make a destructor also
+    ~BST(){
+        delete root;
+    }
+
+    private:
+    BinaryTreeNode<int>* deleteData(int data,BinaryTreeNode<int>* node)
+    {
+        if(node==NULL)
+            return NULL;
+        if(node->data == data)
+        {
+            //case 1 if root left and right are null the we simply delete node and return null
+            if(node->right == NULL && node->left == NULL)
+            {
+                delete node;
+                return NULL;
+            }
+            //case 2 if left is not null but right is null then we delete the node and return first child in left as new root node
+            else if(node->left!=NULL && node->right == NULL)
+            {
+                BinaryTreeNode<int>* newRoot = node->left;
+                node->right = NULL;
+                delete node;
+                return newRoot;
+            }
+             //case 3 if left is null but right is not null then we delete the node and return first child in right as new root node
+            else if(node->right!=NULL && node->left == NULL)
+            {
+                BinaryTreeNode<int>* newRoot = node->right;
+                node->left = NULL;
+                delete node;
+                return newRoot;
+            }
+            //case 4 when no side is null so now we will replace the node with an appropriate node and then delete it
+            //appropriate node should be greater than all in its left and smaller then all in its right
+            //so we choose smallest from right and then make data of node equal to this smallestnode data
+            //then we will delete it from right tree
+            else
+            {
+                BinaryTreeNode<int>* smallestNode = node->right;
+                //smallest node will be in left most of tree
+                while(smallestNode->left != NULL)
+                    smallestNode = smallestNode->left;
+               //now we have the smallest node we simply copy its value in node data
+                //then delete it from right tree and return node
+                int rightmin = smallestNode->data;
+                node->data = rightmin;
+                node->right = deleteData(rightmin,node->right);
+                return node;
+            }
+            
+        }
+        //these are simply recursive call which will use the upper code
+        else if(node->data < data)
+        {
+            node->right = deleteData(data,node->right);
+            return node;
+        }
+            
+        if(node->data > data)
+        {
+            node->left = deleteData(data,node->left);
+            return node;
+        }
+    }
+    
+    //private function for printing
+    
+    void help_print(BinaryTreeNode<int>* root)
+    {
+        if(root==NULL)
+            return;
+        //now we will work on root node according to syntax
+        //syntax is - N:L:x,R:y  here x and y are left and right children of root 
+        //they will be printed only if they are not NULL
+        cout<<root->data<<":";
+        
+        if(root->left != NULL)
+            cout<<"L:"<<root->left->data<<",";
+        
+        if(root->right!=NULL)
+            cout<<"R:"<<root->right->data;
+        
+        cout<<endl;
+        //after changing the lines simply just ask recursion to perform same on left and right
+        help_print(root->left);
+        help_print(root->right);
+    }
+    //public fuctions for user call and to utilize private functions
+    public:
+    void remove(int data) { 
+        this->root = deleteData(data,root);
+    }
+    void print() { 
+        help_print(root);
+    }
+    private:
+    BinaryTreeNode<int>* help_insert(int data,BinaryTreeNode<int>* node)
+    {
+        if(node == NULL)
+        {
+            BinaryTreeNode<int>* newNode = new BinaryTreeNode<int>(data);
+            return newNode;
+        }
+        if(data<=node->data)//we need to put here less then equal to...to remove bug
+        {
+            node->left = help_insert(data,node->left);
+            return node;
+        }
+        else
+        {
+            node->right = help_insert(data,node->right);
+            return node;
+        }
+    }
+    public:
+    void insert(int data) { 
+        //we make a private helping function to use root
+        //here this will be the object which user used...in main code its tree
+        //so tree k ek root me we will attach the node by helper function
+        this->root = help_insert(data,root);
+    }
+    private:
+    bool hasData(int data, BinaryTreeNode<int>* node)
+    {
+        if(node==NULL)
+            return false;
+        if(node->data == data)
+            return true;
+        if(data>node->data)
+            return hasData(data,node->right);
+        else
+            return hasData(data,node->left);
+    }
+    public:
+    bool search(int data) {
+        //we make a helper fuction in private to use root and its for us only
+        //its like taking a node and working on it, it dont have any relation
+        //with root or the user called obj...it will just work on given node and return ans
+		return hasData(data,root);
+    }
+};
