@@ -1,0 +1,92 @@
+/**********************************************************
+	Following is the Binary Tree Node class structure
+
+	template <typename T>
+	class BinaryTreeNode {
+    	public : 
+    	T data;
+    	BinaryTreeNode<T> *left;
+    	BinaryTreeNode<T> *right;
+
+    	BinaryTreeNode(T data) {
+        	this -> data = data;
+        	left = NULL;
+        	right = NULL;
+    	}
+	};
+***********************************************************/
+/*********************************FIRST APPROACH***************/
+/*
+#include <climits>
+int maximum(BinaryTreeNode<int> *root)
+{
+    if(root==NULL)
+        return INT_MIN;//we return this so that our root data do not fail with it
+    //using max function we return the max of all
+    return max(root->data, max(maximum(root->left),maximum(root->right)));
+}
+               
+int minimum(BinaryTreeNode<int> *root)
+{
+    if(root==NULL)
+        return INT_MAX;//we return this so that our root data do not fail with it
+    //using max function we return the max of all
+    return min(root->data, min(minimum(root->left),minimum(root->right)));
+}
+bool isBST(BinaryTreeNode<int> *root) {
+	if(root==NULL)
+        return true;
+    int left_max = maximum(root->left);
+    int right_min = minimum(root->right);
+    //now root->data > left_max && root->data <= right_min and left and right must be a bst then we can return true
+    bool ans = (root->data > left_max)  && (root->data <= right_min) && isBST(root->left) && isBST(root->right);
+    return ans;
+}*/
+//////////////////////////////****THE ABOVE APPROACH TIME COMPLEXITY IS HIGH SO WE DO THIS SECOND ONE*//////////////////
+
+/*******************SECOND APPROACH*****************************/
+/*
+#include <climits>
+//we make a triplet type of class
+class isBSTreturn{
+    public :
+    bool isBST;
+    int minimum;
+    int maximum;
+}
+isBSTreturn isBST(BinaryTreeNode<int> *root)
+{
+    isBSTreturn ans;//a variable to return
+    if(root==NULL)
+    {
+        ans.minimum=INT_MAX;
+        ans.maximum=INT_MIN;
+        ans.isBST=true;
+        return ans;
+    }
+    //now we have to find minimum and maximums
+    isBSTreturn leftans = isBST(root->left);
+    isBSTreturn rightans = isBST(root->right);
+    //now we want overall min and max becoz we need to return 
+    int minimum = min(root->data,min(leftans.minimum,rightans.minimum));
+    int maximum = max(root->data,max(leftans.maximum,rightans.maximum));
+    bool finalans = (root->data>leftans.minimum) && (root->data<=rightans.maximum) && isBST(root->left) && isBST(root->right);
+    //now put all these in the ans to return
+    ans.isBST = finalans;
+    ans.minimum=minimum;
+    ans.maximum=maximum;
+    return ans;
+}*/
+
+/*******************THIRD APPROACH(BEST ONE...SEE THIRD VIDEO FOR EXPLAINATION)*****************************/
+#include <climits>
+bool isBST(BinaryTreeNode<int> *root,int min = INT_MIN,int max=INT_MAX){
+    if(root==NULL)
+        return true;
+    if(root->data > max || root->data < min)
+        return false;
+    bool isleftOk = isBST(root->left,min,root->data-1);
+    bool isrightOk = isBST(root->right,root->data,max);
+    //if both true than return it
+    return isleftOk && isrightOk;
+}
