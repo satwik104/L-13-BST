@@ -1,0 +1,59 @@
+class Pair{
+  public:
+    Node <int>*head;
+    Node <int>*tail;
+};
+//ans is a object of pair class with two nodes
+//a node is a object which have two parts one in which data is their and second where address is stored of further nodes
+//ans is a kind of list holder whose head is head node of LL and tail is tail node of LL
+Pair BST(BinaryTreeNode<int>* root)
+{
+    //base case
+    if(root==NULL)
+    {
+        Pair ans ;
+        ans.head=NULL;
+        ans.tail=NULL;
+        return ans;
+
+    }
+    //we now create the node of list and pass roots data
+	Node<int> *node= new Node<int> (root->data);//a node is created
+    
+    //making recursive calls to get a list from left and right tree
+    Pair leftans=BST(root->left);
+    Pair rightans=BST(root->right);
+    
+     //now we need to make connections
+    Pair ans;//this ans will be having head and tail of answer linkedlist
+    //at every stage we need to take care of both nodes of ans than only we can return it
+    
+    if(leftans.head==NULL && rightans.head==NULL)
+    {
+        ans.head=node;
+        ans.tail=node;
+    }
+    
+   else if(!leftans.head && rightans.head  )
+   		 { ans.head=node;//becoz head of answer list will be root of tree
+           node->next=rightans.head;//we need to connect rightlist with root which is now head of answer list
+   		     
+        	ans.tail=rightans.tail;
+  		  }
+  else if(leftans.head && rightans.head==NULL)
+  		  {  ans.head=leftans.head;//this time leftlist.head will be the head of ans list
+      	     leftans.tail->next=node;//and tail of left list will be the node we need to make sorted LL
+  		     ans.tail=node;//and tail of answer list will be node only
+  		  }
+    else
+    {
+        ans.head=leftans.head;//so now for sorted LL head of it will be leftlist head
+        leftans.tail->next=node;//we need to fit node btw right and left list
+        node->next=rightans.head;//connecting the right list with node
+        ans.tail=rightans.tail;//filling the answer tail with tail of right list
+    }
+     return ans;
+}
+Node<int>* constructLinkedList(BinaryTreeNode<int>* root) {
+   return BST(root).head;
+}
