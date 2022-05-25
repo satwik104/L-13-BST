@@ -1,0 +1,29 @@
+vector<int>* getPath(BinaryTreeNode<int> *root , int data) {
+	if(root==NULL)
+        return NULL;
+    if(root->data==data)
+    {
+        vector<int> *ans = new vector<int> ();
+        ans->push_back(root->data);
+        return ans;
+    }
+    //if data is not similar to root data then we go to left and right
+    vector<int>* leftans = getPath(root->left,data);
+    vector<int>* rightans = getPath(root->right,data);
+    //now we have got path from left if data is in left and right if data is in right tree
+    if(leftans!=NULL)
+    {
+        leftans->push_back(root->data);//add root to the path
+        return leftans;
+    }
+    //if leftans was not having data that means it will have NULL
+    if(rightans!=NULL)
+    {
+        rightans->push_back(root->data);//add roo to the right path
+        return rightans;
+    }
+    //if rightans was not having data that means it will have NULL
+    //so that means we dident found data in tree so return NULL
+    else
+        return NULL;
+}
