@@ -1,0 +1,23 @@
+/*we need to update node data with sum of all node data greater then equal to with that data so we need to go on right of each node*/
+int replace(BinaryTreeNode<int>* root,int sum)
+{
+    if(root==NULL)//base case for the recursion used here
+        return sum;
+    //now we simply ask recursion to update the values of all nodes in right sub tree
+    //and return the sum of required data to replace with root node data
+    sum = replace(root->right,sum);
+    //now we have the sum of all nodes in riht in sum
+    //ao we add root data now in it
+    sum = sum + root->data;//this line will be used to continious addition
+    //now we replace
+    root->data = sum;//this line will be used for continious replacement
+    //now we are tdone with roo and right subtree now we ask recursion to do same with left tree nodes
+    sum = replace(root->left,sum);
+    return sum;
+}
+void replaceWithLargerNodesSum(BinaryTreeNode<int> *root) {
+    if(root==NULL)
+        return;
+    int ans = replace(root,0);
+    return;
+}
