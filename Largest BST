@@ -1,0 +1,45 @@
+/********************************HINT DEKH LE HUSHIYAAR*****************/
+#include<climits>
+#include<cmath>
+class bros{
+    public:
+    int maximum;
+    int minimum;
+    int hight;
+    bool bst;
+};
+bros help(BinaryTreeNode<int>*root){
+    if(root==NULL)
+    {
+        bros obj;
+        obj.minimum = INT_MAX;
+        obj.maximum = INT_MIN;
+        obj.hight = 0;
+        obj.bst = true;
+        return obj;
+    }
+    //make recursive call on left and right of root
+    bros left_ans = help(root->left);
+    bros right_ans = help(root->right);
+    //now operate on left and right ans
+    //now the we will write will be written assuming that we have left and right ans by recursion
+    //but in actual recursion it self will use this to take out final values
+    int minimum = min(root->data,min(left_ans.minimum,right_ans.minimum));
+    int maximum = max(root->data,max(left_ans.maximum,right_ans.maximum));
+    bool isBST = (root->data > left_ans.maximum) && (root->data < right_ans.minimum) && left_ans.bst && right_ans.bst;
+    int finalHight;
+    if(isBST)
+        finalHight = 1+max(left_ans.hight,right_ans.hight);
+    else
+        finalHight = max(left_ans.hight,right_ans.hight);
+    //now we have all values that we need to return so copy them in object
+    bros obj;
+    obj.minimum = minimum;
+    obj.maximum = maximum;
+    obj.bst = isBST;
+    obj.hight = finalHight;
+    return obj;
+}
+int largestBSTSubtree(BinaryTreeNode<int> *root) {
+    return help(root).hight;
+}
