@@ -1,0 +1,33 @@
+void help(BinaryTreeNode<int>*root,int k,vector<int> path)
+{
+    if(root==NULL)
+        return;
+    path.push_back(root->data); //formation of path 
+    //now as root data is stored in path so we need to find remaining sum
+    k = k-root->data;
+    //now we will check if root->left and right are null or not
+    //if yes then we will do some work
+    //if no then we say recursion to go left and right and form path
+    if(root->left == NULL && root->right == NULL)//means we are at a leaf node
+    {
+        if(k==0)//means we have perfect path with us we will print
+        {
+            for(int i : path)
+                cout<<i<<" ";
+            cout<<endl;
+        }
+        //if k!=0 that means we have to remove some elements from back/last of vetor now
+        path.pop_back();
+        return;
+    }
+    //now we are not at leaf node we have to move further so we call recursion
+    help(root->left,k,path);
+    help(root->right,k,path);
+}
+void rootToLeafPathsSumToK(BinaryTreeNode<int> *root, int k) {
+    if(root==NULL)
+        return;
+    vector<int> v;
+    help(root,k,v);
+    return;
+}
